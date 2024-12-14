@@ -1,0 +1,78 @@
+services: 
+
+  #SQL SERVER1 - this will be what we monitor
+  sqlserver1:
+    build:
+      context: .
+      dockerfile: Dockerfile.sqlserver         
+    container_name: sqlserver2022_01
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SQL_SERVER_SA_PASSWORD}      
+      - TELEGRAF_SQL_SERVER_PASSWORD=${TELEGRAF_SQL_SERVER_PASSWORD}  
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./container-data/sqlserver2022_01/data:/var/opt/mssql/data
+      - ./container-data/sqlserver2022_01/data:/var/opt/mssql/log   
+    #bring up all monitoring services first
+    depends_on:
+      - timescaledb
+      - telegraf
+      - grafana
+
+  #SQL SERVER2 - this will be what we monitor
+  sqlserver2:
+    build:
+      context: .
+      dockerfile: Dockerfile.sqlserver      
+    container_name: sqlserver2022_02
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SQL_SERVER_SA_PASSWORD}      
+      - TELEGRAF_SQL_SERVER_PASSWORD=${TELEGRAF_SQL_SERVER_PASSWORD}  
+    ports:
+      - "2433:1433"
+    volumes:
+      - ./container-data/sqlserver2022_02/data:/var/opt/mssql/data
+      - ./container-data/sqlserver2022_02/data:/var/opt/mssql/log   
+    #bring up all monitoring services first
+    depends_on:
+      - timescaledb
+      - telegraf
+      - grafana
+
+  #TIMESCALEDB - this will be the database where we store the metrics
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: timescaledb
+    environment:
+      - POSTGRES_PASSWORD=${TIMESCALEDB_POSTGRES_PASSWORD}
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./container-data/timescaledb/data:/var/lib/postgresql/data
+
+  #TELEGRAF - this will be the agent that collects the metrics
+  telegraf:
+    build:
+      context: .
+      dockerfile: Dockerfile.telegraf
+      args:
+        TIMESCALEDB_POSTGRES_PASSWORD: ${TIMESCALEDB_POSTGRES_PASSWORD}
+        TELEGRAF_SQL_SERVER_PASSWORD: ${TELEGRAF_SQL_SERVER_PASSWORD}
+    container_name: telegraf
+
+  #GRAFANA - this will be the dashboard where we visualize the metrics
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./container-data/grafana/data:/var/lib/grafana
+    depends_on:
+      - timescaledb
+      - telegraf

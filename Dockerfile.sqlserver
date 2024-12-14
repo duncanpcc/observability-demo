@@ -1,0 +1,27 @@
+FROM mcr.microsoft.com/mssql/server:2022-latest
+
+# Switch to root user to change permissions
+USER root
+
+#create custom cert because the default on was creating a negative serial which is invalid
+RUN openssl req -x509 -nodes -newkey rsa:2048 -subj '/CN=mssql' -keyout /etc/ssl/private/mssql.key -out /etc/ssl/certs/mssql.pem -days 365
+RUN chmod 755 /etc/ssl/private
+RUN chmod 600 /etc/ssl/private/mssql.key
+RUN chmod 600 /etc/ssl/certs/mssql.pem
+
+# Change the owner of the .key and .pem files to the mssql user
+RUN chown mssql:mssql /etc/ssl/private/mssql.key /etc/ssl/certs/mssql.pem
+
+RUN mkdir -p /var/opt/mssql
+COPY mssql.conf /var/opt/mssql/mssql.conf
+
+# Copy the initialization and entrypoint scripts and change permissions
+COPY init-sqlserver.sh /home/init-sqlserver.sh
+COPY sqlserver_entrypoint.sh /home/sqlserver_entrypoint.sh
+RUN chmod +x /home/init-sqlserver.sh /home/sqlserver_entrypoint.sh
+
+# Switch back to the default user
+USER mssql
+
+# Set the entrypoint script
+ENTRYPOINT ["/home/sqlserver_entrypoint.sh"]
