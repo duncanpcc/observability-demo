@@ -1,3 +1,5 @@
+## <span style="color: red;">Note: The following instructions have been tested on Mac and WSL (in windows). They will need to be changed for running on Windows directly.</span>
+
 # How to build project for testing
 
 1. run the following script to create these directories (run this from the observability2 folder)
@@ -8,6 +10,7 @@ mkdir -p ./container-data/sqlserver2022_01/data
 mkdir -p ./container-data/sqlserver2022_02/data
 mkdir -p ./container-data/timescaledb/data
 mkdir -p ./container-data/grafana/data
+chmod -R 777 ./container-data
 ```
 
 2. Create a .env file in the same observability2 folder (it should be at the same level as the docker-compose.yml file). 
