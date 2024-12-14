@@ -20,6 +20,7 @@ services:
       - timescaledb
       - telegraf
       - grafana
+      - influxdb
 
   #SQL SERVER2 - this will be what we monitor
   sqlserver2:
@@ -41,6 +42,7 @@ services:
       - timescaledb
       - telegraf
       - grafana
+      - influxdb
 
   #TIMESCALEDB - this will be the database where we store the metrics
   timescaledb:
@@ -54,6 +56,19 @@ services:
       - "5432:5432"
     volumes:
       - ./container-data/timescaledb/data:/var/lib/postgresql/data
+  
+  #INFLUXDB - this will be the database where we store the metrics
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    environment:
+      - INFLUXDB_DB=telegraf
+      - INFLUXDB_USER=telegraf
+      - INFLUXDB_USER_PASSWORD=${INFLUXDB_USER_PASSWORD}
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./container-data/influxdb/data:/var/lib/influxdb
 
   #TELEGRAF - this will be the agent that collects the metrics
   telegraf:
@@ -76,3 +91,4 @@ services:
     depends_on:
       - timescaledb
       - telegraf
+      - influxdb

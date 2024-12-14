@@ -10,6 +10,7 @@ mkdir -p ./container-data/sqlserver2022_01/data
 mkdir -p ./container-data/sqlserver2022_02/data
 mkdir -p ./container-data/timescaledb/data
 mkdir -p ./container-data/grafana/data
+mkdir -p ./container-data/influxdb/data
 chmod -R 777 ./container-data
 ```
 
@@ -20,6 +21,7 @@ touch .env
 echo "SQL_SERVER_SA_PASSWORD=YourStrongPassw0rd" > .env
 echo "TIMESCALEDB_POSTGRES_PASSWORD=YourStrongPassw0rd" >> .env
 echo "TELEGRAF_SQL_SERVER_PASSWORD=YourStrongPassw0rd" >> .env
+echo "INFLUXDB_USER_PASSWORD=YourStrongPassw0rd" >> .env
 ```
 
 3. Stand up the test environment with docker-compose:
@@ -56,10 +58,11 @@ docker-compose up
 
 1. Create new datasource: postgres (use grafana native)
 
-![Local Image](./add-datasource.png)
+![Local Image](/readme-data/add-datasource.png)
 
 2. Fill out the connection information. Click **Save and Test** when done. If successful will get a message saying "Database Connection OK"   
 
+* **NAME**: grafana-postgresql-datasource
 * **SERVER**: timescaledb:5432
 * **LOGIN**: postgres
 * **PASSWORD**: {{use password from .env file}} 
@@ -67,7 +70,14 @@ docker-compose up
 * **TLS/SSL MODE** Disable SSL
 * **TIMESCALEDB** Enable
 
-3. Now Create your first dashboard. A Simple test would be to verify you can query the CPU metric:
+3. Repeat steps 1 and 2 for **Influxdb** datasource. 
+
+* **NAME**: influxdb
+* **QUERY LANGUAGE**: InfluxQL
+* **URL**: http://influxdb:8086
+* **DATABASE**: telegraf
+
+4. Now Create your first dashboard. A Simple test would be to verify you can query the CPU metric (this will use the timescaleDB database):
 
 Query to get CPU and group on SQL_Instance:   
 
@@ -79,6 +89,14 @@ GROUP BY sql_instance,time
 ORDER BY time
 ```   
 
-![Local Image](./dashboard_create_example.png)   
+![Local Image](/readme-data/dashboard_create_example.png)   
 
+5. Create a second dashboard to test influxdb (same as item 4 above:)
 
+Query to get CPU and group on SQL_Instance:   
+
+```SQL
+SELECT mean("sqlserver_process_cpu"), mean("other_process_cpu"), mean("system_idle_cpu") FROM "sqlserver_cpu" WHERE $timeFilter GROUP BY time($__interval), "sql_instance"::tag fill(previous)
+```
+
+![Local Image](/readme-data/dashboard_create_influxdb_example.png)
