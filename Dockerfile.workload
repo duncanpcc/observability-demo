@@ -1,0 +1,60 @@
+# Stage 1: Build the Go application
+FROM golang:1.23-alpine AS builder
+
+# define local vars for passwords
+ARG WORKLOAD_DATABASE_SERVER
+ARG WORKLOAD_DATABASE
+ARG SQL_SA_USERNAME
+ARG SQL_SA_PASSWORD
+ARG WORKLOAD_SERVER_PORT
+ARG MAX_PARALLEL_WORKLOADS
+
+# set environment variables
+ENV WORKLOAD_DATABASE_SERVER=${WORKLOAD_DATABASE_SERVER}
+ENV WORKLOAD_DATABASE=${WORKLOAD_DATABASE}
+ENV SQL_SA_USERNAME=${SQL_SA_USERNAME}
+ENV SQL_SA_PASSWORD=${SQL_SA_PASSWORD}
+ENV WORKLOAD_SERVER_PORT=${WORKLOAD_SERVER_PORT}
+ENV MAX_PARALLEL_WORKLOADS=${MAX_PARALLEL_WORKLOADS}
+
+# Set the Current Working Directory inside the container
+WORKDIR /app
+
+# Copy go.mod and go.sum files
+COPY workload-generator/go.mod workload-generator/go.sum ./
+
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+RUN go mod download
+
+# Copy the source code into the container
+COPY workload-generator/ .
+
+# Replace certain text values in the configuration file
+RUN sed -i "s/{{WORKLOAD_DATABASE_SERVER}}/${WORKLOAD_DATABASE_SERVER}/g" /app/config.json && \
+    sed -i "s/{{WORKLOAD_DATABASE}}/${WORKLOAD_DATABASE}/g" /app/config.json && \
+    sed -i "s/{{SQL_SA_USERNAME}}/${SQL_SA_USERNAME}/g" /app/config.json && \
+    sed -i "s/{{SQL_SA_PASSWORD}}/${SQL_SA_PASSWORD}/g" /app/config.json && \
+    sed -i "s/{{WORKLOAD_SERVER_PORT}}/${WORKLOAD_SERVER_PORT}/g" /app/config.json && \
+    sed -i "s/{{MAX_PARALLEL_WORKLOADS}}/${MAX_PARALLEL_WORKLOADS}/g" /app/config.json
+
+# Build the Go application
+RUN go build -o main .
+
+# Stage 2: Create a minimal image with the compiled Go application
+FROM alpine:latest
+
+# Set the Current Working Directory inside the container
+WORKDIR /root/
+
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /app/main .
+COPY --from=builder /app/config.json .
+COPY --from=builder /app/CREATE_TABLES.sql .
+COPY --from=builder /app/CREATE_DATABASE.sql .
+COPY --from=builder /app/CREATE_WORKLOAD_SPROC.sql .
+
+# Expose port 8080 to the outside world
+EXPOSE 8080
+
+# Command to run the executable
+CMD ["./main"]

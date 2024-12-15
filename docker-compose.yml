@@ -44,6 +44,38 @@ services:
       - grafana
       - influxdb
 
+  #workload generator1
+  workload1:
+    build:
+      context: .
+      dockerfile: Dockerfile.workload
+      args:
+        WORKLOAD_DATABASE_SERVER: sqlserver2022_01
+        WORKLOAD_DATABASE: demo_workload
+        SQL_SA_USERNAME: sa
+        SQL_SA_PASSWORD: ${SQL_SERVER_SA_PASSWORD}
+        WORKLOAD_SERVER_PORT: 1433
+        MAX_PARALLEL_WORKLOADS: 1000
+    container_name: workload1    
+    depends_on:
+      - sqlserver1
+
+  #workload generator2
+  workload2:
+    build:
+      context: .
+      dockerfile: Dockerfile.workload
+      args:
+        WORKLOAD_DATABASE_SERVER: sqlserver2022_02
+        WORKLOAD_DATABASE: demo_workload
+        SQL_SA_USERNAME: sa
+        SQL_SA_PASSWORD: ${SQL_SERVER_SA_PASSWORD}
+        WORKLOAD_SERVER_PORT: 1433
+        MAX_PARALLEL_WORKLOADS: 500
+    container_name: workload2    
+    depends_on:
+      - sqlserver2
+
   #TIMESCALEDB - this will be the database where we store the metrics
   timescaledb:
     image: timescale/timescaledb:latest-pg16
