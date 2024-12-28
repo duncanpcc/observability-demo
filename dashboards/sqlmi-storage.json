@@ -1,4 +1,41 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_INFLUXDB",
+      "label": "InfluxDB",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "10.4.2"
+    },
+    {
+      "type": "datasource",
+      "id": "influxdb",
+      "name": "InfluxDB",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -18,7 +55,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 6,
+  "id": null,
   "links": [
     {
       "asDropdown": true,
@@ -62,7 +99,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -119,7 +156,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -161,7 +198,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "hide": false,
           "query": "SELECT LAST(\"cpu_count\") FROM \"sqlserver_server_properties\" WHERE (\"sql_instance\" =~ /$InstanceName$/  AND \"sql_version\"::tag <> '12.0.2000.8') AND $timeFilter GROUP BY time($interval)",
@@ -176,7 +213,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -233,7 +270,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -281,7 +318,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "hide": false,
           "query": "SELECT LAST(\"server_memory\") FROM \"sqlserver_server_properties\" WHERE (\"sql_instance\" =~ /$InstanceName$/  AND \"sql_version\"::tag <> '12.0.2000.8') AND $timeFilter GROUP BY time($interval)",
@@ -296,7 +333,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "description": "",
       "fieldConfig": {
@@ -354,7 +391,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [],
           "measurement": "sqlserver_server_properties",
@@ -389,7 +426,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "description": "",
       "fieldConfig": {
@@ -447,7 +484,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [],
           "measurement": "sqlserver_server_properties",
@@ -482,7 +519,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "description": "",
       "fieldConfig": {
@@ -540,7 +577,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -592,7 +629,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -649,7 +686,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [],
           "measurement": "sqlserver_server_properties",
@@ -686,7 +723,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -743,7 +780,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [],
           "measurement": "sqlserver_server_properties",
@@ -780,7 +817,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -837,7 +874,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -887,7 +924,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -944,7 +981,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [],
           "measurement": "sqlserver_instance_resource_governance",
@@ -983,7 +1020,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1040,7 +1077,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -1086,7 +1123,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1143,7 +1180,7 @@
         {
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [],
           "measurement": "sqlserver_instance_resource_governance",
@@ -1208,7 +1245,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1335,7 +1372,7 @@
           "alias": "$tag_database_name | $tag_logical_filename",
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -1387,7 +1424,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1514,7 +1551,7 @@
           "alias": "$tag_database_name | $tag_logical_filename",
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -1566,7 +1603,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1693,7 +1730,7 @@
           "alias": "$tag_database_name | $tag_logical_filename",
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -1747,7 +1784,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1874,7 +1911,7 @@
           "alias": "$tag_database_name | $tag_logical_filename",
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -1928,7 +1965,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2013,7 +2050,7 @@
           "alias": "$tag_database_name | $tag_logical_filename",
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -2065,7 +2102,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2191,7 +2228,7 @@
           "alias": "$tag_database_name | $tag_logical_filename",
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -2271,7 +2308,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2398,7 +2435,7 @@
           "alias": "$tag_instance",
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -2444,7 +2481,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2530,7 +2567,7 @@
           "alias": "$tag_instance",
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -2576,7 +2613,7 @@
     {
       "datasource": {
         "type": "influxdb",
-        "uid": "000000001"
+        "uid": "${DS_INFLUXDB}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2662,7 +2699,7 @@
           "alias": "$tag_instance",
           "datasource": {
             "type": "influxdb",
-            "uid": "000000001"
+            "uid": "${DS_INFLUXDB}"
           },
           "groupBy": [
             {
@@ -2713,14 +2750,10 @@
   "templating": {
     "list": [
       {
-        "current": {
-          "selected": false,
-          "text": "pccsql-use2-prod-brk-ses0001.c1d16d47f5f0.database.windows.net",
-          "value": "pccsql-use2-prod-brk-ses0001.c1d16d47f5f0.database.windows.net"
-        },
+        "current": {},
         "datasource": {
           "type": "influxdb",
-          "uid": "000000001"
+          "uid": "${DS_INFLUXDB}"
         },
         "definition": "SHOW TAG VALUES  FROM \"sqlserver_server_properties\" WITH KEY=\"sql_instance\"",
         "hide": 0,
