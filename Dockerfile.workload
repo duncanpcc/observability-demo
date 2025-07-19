@@ -2,18 +2,20 @@
 FROM golang:1.23-alpine AS builder
 
 # define local vars for passwords
+ARG DB_PLATFORM
 ARG WORKLOAD_DATABASE_SERVER
 ARG WORKLOAD_DATABASE
-ARG SQL_SA_USERNAME
-ARG SQL_SA_PASSWORD
+ARG SQL_USERNAME
+ARG SQL_PASSWORD
 ARG WORKLOAD_SERVER_PORT
 ARG MAX_PARALLEL_WORKLOADS
 
 # set environment variables
+ENV DB_PLATFORM=${DB_PLATFORM}
 ENV WORKLOAD_DATABASE_SERVER=${WORKLOAD_DATABASE_SERVER}
 ENV WORKLOAD_DATABASE=${WORKLOAD_DATABASE}
-ENV SQL_SA_USERNAME=${SQL_SA_USERNAME}
-ENV SQL_SA_PASSWORD=${SQL_SA_PASSWORD}
+ENV SQL_USERNAME=${SQL_USERNAME}
+ENV SQL_PASSWORD=${SQL_PASSWORD}
 ENV WORKLOAD_SERVER_PORT=${WORKLOAD_SERVER_PORT}
 ENV MAX_PARALLEL_WORKLOADS=${MAX_PARALLEL_WORKLOADS}
 
@@ -32,9 +34,10 @@ COPY workload-generator/ .
 # Replace certain text values in the configuration file
 RUN sed -i "s/{{WORKLOAD_DATABASE_SERVER}}/${WORKLOAD_DATABASE_SERVER}/g" /app/config.json && \
     sed -i "s/{{WORKLOAD_DATABASE}}/${WORKLOAD_DATABASE}/g" /app/config.json && \
-    sed -i "s/{{SQL_SA_USERNAME}}/${SQL_SA_USERNAME}/g" /app/config.json && \
-    sed -i "s/{{SQL_SA_PASSWORD}}/${SQL_SA_PASSWORD}/g" /app/config.json && \
+    sed -i "s/{{SQL_USERNAME}}/${SQL_USERNAME}/g" /app/config.json && \
+    sed -i "s/{{SQL_PASSWORD}}/${SQL_PASSWORD}/g" /app/config.json && \
     sed -i "s/{{WORKLOAD_SERVER_PORT}}/${WORKLOAD_SERVER_PORT}/g" /app/config.json && \
+    sed -i "s/{{DB_PLATFORM}}/${DB_PLATFORM}/g" /app/config.json && \
     sed -i "s/{{MAX_PARALLEL_WORKLOADS}}/${MAX_PARALLEL_WORKLOADS}/g" /app/config.json
 
 # Build the Go application
@@ -52,6 +55,12 @@ COPY --from=builder /app/config.json .
 COPY --from=builder /app/CREATE_TABLES.sql .
 COPY --from=builder /app/CREATE_DATABASE.sql .
 COPY --from=builder /app/CREATE_WORKLOAD_SPROC.sql .
+COPY --from=builder /app/CREATE_TABLES_PG.sql .
+COPY --from=builder /app/CREATE_DATABASE_PG.sql .
+COPY --from=builder /app/CREATE_WORKLOAD_SPROC_PG.sql .
+COPY --from=builder /app/CREATE_TABLES_MYSQL.sql .
+COPY --from=builder /app/CREATE_DATABASE_MYSQL.sql .
+COPY --from=builder /app/CREATE_WORKLOAD_SPROC_MYSQL.sql .
 
 # Expose port 8080 to the outside world
 EXPOSE 8080

@@ -1,8 +1,9 @@
 {
+    "db_platform": "{{DB_PLATFORM}}",
     "server": "{{WORKLOAD_DATABASE_SERVER}}",
     "database": "{{WORKLOAD_DATABASE}}",
-    "username": "{{SQL_SA_USERNAME}}",
-    "password": "{{SQL_SA_PASSWORD}}",
+    "username": "{{SQL_USERNAME}}",
+    "password": "{{SQL_PASSWORD}}",
     "port": {{WORKLOAD_SERVER_PORT}},
     "MAX_PARALLEL_WORKLOADS": {{MAX_PARALLEL_WORKLOADS}}
 }

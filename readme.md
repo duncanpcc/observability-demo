@@ -11,6 +11,8 @@ mkdir -p ./container-data/sqlserver2022_02/data
 mkdir -p ./container-data/timescaledb/data
 mkdir -p ./container-data/grafana/data
 mkdir -p ./container-data/influxdb/data
+mkdir -p ./container-data/postgres1/data
+mkdir -p ./container-data/prometheus/data
 chmod -R 777 ./container-data
 ```
 
@@ -22,6 +24,7 @@ echo "SQL_SERVER_SA_PASSWORD=YourStrongPassw0rd" > .env
 echo "TIMESCALEDB_POSTGRES_PASSWORD=YourStrongPassw0rd" >> .env
 echo "TELEGRAF_SQL_SERVER_PASSWORD=YourStrongPassw0rd" >> .env
 echo "INFLUXDB_USER_PASSWORD=YourStrongPassw0rd" >> .env
+echo "POSTGRES_PASSWORD=YourStrongPassw0rd" >> .env
 ```
 
 3. Stand up the test environment with docker-compose:
