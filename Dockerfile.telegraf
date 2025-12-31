@@ -3,14 +3,17 @@ FROM telegraf:latest
 # define local vars for passwords
 ARG TIMESCALEDB_POSTGRES_PASSWORD
 ARG TELEGRAF_SQL_SERVER_PASSWORD
+ARG CLICKHOUSE_PASSWORD
 
 # set environment variables
 ENV TIMESCALEDB_POSTGRES_PASSWORD=${TIMESCALEDB_POSTGRES_PASSWORD}
 ENV TELEGRAF_SQL_SERVER_PASSWORD=${TELEGRAF_SQL_SERVER_PASSWORD}
+ENV CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
 
 # Copy the telegraf configuration file
 COPY telegraf.conf /etc/telegraf/telegraf.conf
 
 # Replace certain text values in the configuration file
 RUN sed -i "s/{{TIMESCALEDB_POSTGRES_PASSWORD}}/${TIMESCALEDB_POSTGRES_PASSWORD}/g" /etc/telegraf/telegraf.conf && \
-    sed -i "s/{{TELEGRAF_SQL_SERVER_PASSWORD}}/${TELEGRAF_SQL_SERVER_PASSWORD}/g" /etc/telegraf/telegraf.conf
+    sed -i "s/{{TELEGRAF_SQL_SERVER_PASSWORD}}/${TELEGRAF_SQL_SERVER_PASSWORD}/g" /etc/telegraf/telegraf.conf && \
+    sed -i "s/{{CLICKHOUSE_PASSWORD}}/${CLICKHOUSE_PASSWORD}/g" /etc/telegraf/telegraf.conf
