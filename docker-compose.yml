@@ -125,6 +125,25 @@ services:
     volumes:     
       - ./container-data/prometheus/data:/prometheus
 
+  #CLICKHOUSE - this will be the database where prometheus stores the metrics
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
+    ports:
+      - "8123:8123"   # HTTP
+      - "9000:9000"   # native
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    environment:
+      CLICKHOUSE_DB: clickmetrics
+      CLICKHOUSE_USER: admin
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+    volumes:
+      - ./container-data/clickhouse/data:/var/lib/clickhouse
+
   #TIMESCALEDB - this will be the database where we store the metrics
   timescaledb:
     image: timescale/timescaledb:latest-pg16
@@ -159,6 +178,7 @@ services:
       args:
         TIMESCALEDB_POSTGRES_PASSWORD: ${TIMESCALEDB_POSTGRES_PASSWORD}
         TELEGRAF_SQL_SERVER_PASSWORD: ${TELEGRAF_SQL_SERVER_PASSWORD}
+        CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
     container_name: telegraf
 
   #GRAFANA - this will be the dashboard where we visualize the metrics
